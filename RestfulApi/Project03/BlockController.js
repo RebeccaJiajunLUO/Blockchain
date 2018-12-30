@@ -25,16 +25,27 @@ class BlockController {
      *  Implement a GET Endpoint to retrieve a block by index (position in the array), url: "/api/block/:index"
      */
     getBlockByIndex() {
-        this.app.get("/block/:index", (req, res) => {
+        this.app.get("/block/:index", async(req, res) => {
             // Add your code here
             try{
                 let index = req.params.index;   
                 
-                let IndexOfBlock = blockchain.getBlock(index);
+                const IndexOfBlock = await blockchain.getBlock(index);
                 // let IndexOfBlock = this.blocks[index];
                 if(IndexOfBlock)
                 {
-                    res.send(IndexOfBlock);
+                    //make sure IndexBlock output in JSON format
+                    var obj = JSON.parse(IndexOfBlock);
+
+                    let data = obj.body;
+                    let showblock = new BlockClass.Block(data);
+                    showblock.hash = obj.hash;
+                    showblock.height = obj.height;
+                    showblock.time = obj.time;
+                    showblock.previousBlockHash = obj.previousBlockHash;
+
+                    res.send(showblock);
+                    // res.send(IndexOfBlock);
                 }
                 else
                 {
@@ -61,23 +72,37 @@ class BlockController {
      * Implement a POST Endpoint to add a new Block, url: "/api/block"
      */
     postNewBlock() {
-        this.app.post("/block", (req, res) => {
+        this.app.post("/block", async(req, res) => {
             // Add your code here
-
-            let blockAux = new BlockClass.Block(req.body.body);
-            console.log("body:"+req.body.body);
             
-            let index = this.blocks.length;
+            // let blockAux = new BlockClass.Block(req.body.body);
+            // console.log("body:"+req.body.body);
+            
+            // let index = this.blocks.length;
 
-            blockAux.height = index++;
-            blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
-            this.blocks.push(blockAux);
+            // blockAux.height = index++;
+            // blockAux.hash = SHA256(JSON.stringify(blockAux)).toString();
+            // this.blocks.push(blockAux);
 
-            // verify and return the most recently added block
-            res.status(201).send(blockAux);
+            // // verify and return the most recently added block
+            // res.status(201).send(blockAux);
 
+            const data = req.body.body;
 
-  
+            if(data == undefined || data === ''){
+                res.status(404).json({
+                    success: false,
+                    message: "Please check your request, which might be empty, undefined, or in a wrong format."
+                  })
+            }
+            else
+            {
+                const blockAux = new BlockClass.Block(data);
+                await blockchain.addBlock(blockAux);
+                // verify and return the most recently added block
+                res.status(201).send(blockAux);
+
+            }
 
 
 
