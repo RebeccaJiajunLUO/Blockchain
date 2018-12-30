@@ -6,6 +6,7 @@ const SHA256 = require('crypto-js/sha256');
 
 //Importing levelSandbox class
 const LevelSandboxClass = require('./levelSandbox.js');
+const BlockClass = require('./Block.js');
 
 // // Creating the levelSandbox class object
 // const db = new LevelSandboxClass.LevelSandbox();
@@ -14,16 +15,16 @@ const LevelSandboxClass = require('./levelSandbox.js');
 |  Class with a constructor for block 			   |
 |  ===============================================*/
 
-class Block{
-	constructor(data){
-     this.hash = "",
-     this.height = 0,
-     this.body = data,
-     this.time = 0,
-     this.previousBlockHash = ""
+// class Block{
+// 	constructor(data){
+//      this.hash = "",
+//      this.height = 0,
+//      this.body = data,
+//      this.time = 0,
+//      this.previousBlockHash = ""
 
-    }
-}
+//     }
+// }
 
 /* ===== Blockchain Class ==========================
 |  Class with a constructor for new blockchain 		|
@@ -42,7 +43,7 @@ class Blockchain{
     const height = await this.getBlockHeight();
     if (height == -1) {
 
-      const block = new Block("First block in the chain - Genesis block");
+      const block = new BlockClass.Block("First block in the chain - Genesis block");
       
       await this.addBlock(block);
       console.log(block);
@@ -155,31 +156,33 @@ class Blockchain{
 
     }
 
-
-
     
 }
 
-let myBlockChain = new Blockchain();
-(function theLoop (i) {
-    setTimeout(function () {
-        let blockTest = new Block("Test Block - "+ (i + 1));
-        myBlockChain.addBlock(blockTest).then((result) => {
-            console.log(result);//output block details
-            i++;
-            if (i < 3) theLoop(i);
-        });
-    }, 1000);
-  })(0);
+// let myBlockChain = new Blockchain();
+// (function theLoop (i) {
+//     setTimeout(function () {
+//         let blockTest = new BlockClass.Block("Test Block - "+ (i + 1));
+//         myBlockChain.addBlock(blockTest).then((result) => {
+//             console.log(result);//output block details
+//             i++;
+//             if (i < 3) theLoop(i);
+//         });
+//     }, 1000);
+//   })(0);
 
-  let validateBlockResult = myBlockChain.validateBlock(2);
-  if(validateBlockResult)
-  {
-        console.log("Block 2 is not changed！");
-  }
+//   let validateBlockResult = myBlockChain.validateBlock(2);
+//   if(validateBlockResult)
+//   {
+//         console.log("Block 2 is not changed！");
+//   }
 
-  let validateChain = myBlockChain.validateChain();
-  if(validateChain)
-  {
-     console.log('No errors detected');
-  }
+//   let validateChain = myBlockChain.validateChain();
+//   if(validateChain)
+//   {
+//      console.log('No errors detected');
+//   }
+
+
+  // module.exports.Blockchain = Blockchain;
+  module.exports = Blockchain;

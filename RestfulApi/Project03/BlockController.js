@@ -1,5 +1,7 @@
 const SHA256 = require('crypto-js/sha256');
 const BlockClass = require('./Block.js');
+const Blockchain = require('./simpleChain.js');
+const blockchain = new Blockchain();
 
 /**
  * Controller Definition to encapsulate routes to work with blocks
@@ -23,11 +25,13 @@ class BlockController {
      *  Implement a GET Endpoint to retrieve a block by index (position in the array), url: "/api/block/:index"
      */
     getBlockByIndex() {
-        this.app.get("/api/block/:index", (req, res) => {
+        this.app.get("/block/:index", (req, res) => {
             // Add your code here
             try{
-                let index = req.params.index;    
-                let IndexOfBlock = this.blocks[index];
+                let index = req.params.index;   
+                
+                let IndexOfBlock = blockchain.getBlock(index);
+                // let IndexOfBlock = this.blocks[index];
                 if(IndexOfBlock)
                 {
                     res.send(IndexOfBlock);
@@ -50,12 +54,6 @@ class BlockController {
             
 
 
-
-            // res.json({
-            //     success: true,
-            //     data: "test getBlockByIndex"
-            // })
-
         });
     }
 
@@ -63,7 +61,7 @@ class BlockController {
      * Implement a POST Endpoint to add a new Block, url: "/api/block"
      */
     postNewBlock() {
-        this.app.post("/api/block", (req, res) => {
+        this.app.post("/block", (req, res) => {
             // Add your code here
 
             let blockAux = new BlockClass.Block(req.body.body);
@@ -107,6 +105,7 @@ class BlockController {
 
 
     }
+
 
 }
 
