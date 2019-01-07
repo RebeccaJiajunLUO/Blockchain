@@ -39,6 +39,7 @@ class BlockAPI {
      */
 	initControllers() {
 		require("./BlockController.js")(this.app);
+		require("./Validation.js")(this.app);
 	}
 
     /**
