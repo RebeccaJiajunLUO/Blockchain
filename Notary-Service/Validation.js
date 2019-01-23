@@ -1,8 +1,13 @@
 const SHA256 = require('crypto-js/sha256');
 const BlockClass = require('./Block.js');
 const Blockchain = require('./simpleChain.js');
+const hex2ascii = require('hex2ascii');
 const blockchain = new Blockchain();
 
+
+function isASCII(str) {
+    return /^[\x00-\x7F]*$/.test(str);
+}
 /**
  * Controller Definition to encapsulate routes to work with blocks
  */
@@ -18,10 +23,12 @@ class ValidationController {
         this.mempool = [];
         this.timeoutRequests = [];
         this.mempoolValid = [];
+        this.newValidmempool = [];
         // this.initializeMockData();
         // this.getBlockByIndex();
         this.postRequest();
         this.validateRequest();
+        this.postBlock();
     }
 
 
@@ -63,9 +70,9 @@ class ValidationController {
                         this.mempool[address] = {message, requestTimeStamp };
                         timeLeft = 300;
 
-                        setTimeout(function(){
-                            delete this.mempool[address];
-                        },TimeoutRequestsWindowTime);                       
+                        // setTimeout(function(){
+                        //     delete this.mempool[address];
+                        // },TimeoutRequestsWindowTime);                       
 
                     }              
                 
@@ -116,7 +123,7 @@ class ValidationController {
                     //Verify the signature, always fail 
                     const bitcoinMessage = require('bitcoinjs-message'); 
                     let isValid = bitcoinMessage.verify(message, address, signature);
-                    console.log(isValid);
+                    // console.log(isValid);
 
 
                     if(isValid){
@@ -153,10 +160,114 @@ class ValidationController {
             catch(error){
                 res.status(404).json({
                     success: false,
-                    message: `Message-signature failed. ${error}`
+                    message: `Post Message-signature failed. ${error}`
                   })
             }
         });
+
+    }
+
+/**
+ * Implement a POST Endpoint to add a newBlock object (a new star), url: "/block"
+*/
+async postBlock(){
+        this.app.post("/block", async(req, res) => {
+            try{
+                let script = req.body;
+
+
+                if(script == undefined || script === ''){
+                    res.status(404).json({
+                        success: false,
+                        message: "Please check your request, which might be empty, undefined, or in a wrong format."
+                      })
+                }
+                else{
+                    let address = script.address;
+                    let dec = script.star.dec;
+                    let ra = script.star.ra;
+                    let mag = script.star.mag;
+                    let cen = script.star.cen;
+                    let story = script.star.story;
+
+                    // let isASCII_flag =  /^[\x00-\x7F]*$/.test(story);
+                    let isASCII_flag =  isASCII(story);
+                  
+                    if(!isASCII_flag){
+                        //throw  is often included in try region
+                        throw "The story should only contain ascii characters";
+                    }
+                    else
+                    {
+                        console.log("All characters of story are ascii code!");
+                    }
+                    
+                    if(story.length > 500){
+                        throw "The story is too long!";
+                    }
+
+                    if(ra.length === 0||dec.length === 0){
+                        throw "ra or dec is empty, please check the body again!";
+                    }
+
+                   
+
+                   //Verify if the request validation exists and if it is valid.
+                   let verifiedid = false;
+                   this.mempoolValid.forEach(function(value){
+                    if( address === value.status.address){
+                        verifiedid = true;                       
+                    }
+                    else{
+                        throw "This address is not verified yet, please make sure it is valid!";
+                    }
+                })
+                    
+                    if(verifiedid)
+                    {
+                        // story = hex2ascii(story);
+                        story = Buffer(story).toString('hex');
+
+                        let body = {
+                            address: address,
+                            star: {
+                                  ra: ra,
+                                  dec: dec,
+                                  mag: mag,
+                                  cen: cen,
+                                  story: story
+                                  }
+                        }
+
+                        const blockAux = new BlockClass.Block(body);
+                        await blockchain.addBlock(blockAux);
+
+                        //"storyDecoded" property is not being saved in the block
+                        blockAux.body.star.storyDecoded = hex2ascii(body.star.story);
+
+
+                        // return the most recently added block
+                        res.status(201).send(blockAux);
+                    }
+                    else
+                    {
+                        res.star(404).json({
+                            success: false,
+                            message: 'Your address is not valid or expired. Please go to requestValidation to start the process'
+                        })  
+                    }
+
+                }
+            }
+            catch(error)
+            {
+                res.status(404).json({
+                    success: false,
+                    message: `Post star failed. ${error}`
+                })
+
+            }
+        })
 
     }
 
