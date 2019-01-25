@@ -29,6 +29,7 @@ class ValidationController {
         this.postRequest();
         this.validateRequest();
         this.postBlock();
+        this.getBlockByHash();
     }
 
 
@@ -271,6 +272,55 @@ async postBlock(){
 
     }
 
+    /**
+     * Implement a GET Endpoint to retrieve a block by index, url: "/stars/hash:[HASH]"
+     */
+    getBlockByHash() {
+        this.app.get("/stars/hash:[HASH]", async(req, res) => {
+            //以下代码还没改
+            // Add your code here
+            try{
+                let index = req.params.index;   
+                
+                const IndexOfBlock = await blockchain.getBlock(index);
+                // let IndexOfBlock = this.blocks[index];
+                if(IndexOfBlock)
+                {
+                    //make sure IndexBlock output in JSON format
+                    var obj = JSON.parse(IndexOfBlock);
+
+                    let data = obj.body;
+                    let showblock = new BlockClass.Block(data);
+                    showblock.hash = obj.hash;
+                    showblock.height = obj.height;
+                    showblock.time = obj.time;
+                    showblock.previousBlockHash = obj.previousBlockHash;
+
+                    res.send(showblock);
+                    // res.send(IndexOfBlock);
+                }
+                else
+                {
+                    res.status(404).json({
+                        success: false,
+                        message: `Block ${req.params.index} is not found.`
+                      })
+                }
+                
+
+            }catch(error){
+                res.status(404).json({
+                    success: false,
+                    message: `Block is not found.`
+                  })
+            }
+            
+
+
+        });
+    }
+
+
     
 
     /**
@@ -285,7 +335,6 @@ async postBlock(){
                 this.blocks.push(blockAux);
             }
         }
-
 
     }
 

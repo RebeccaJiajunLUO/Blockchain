@@ -57,7 +57,7 @@ class Blockchain{
 
     // Block height
       newBlock.height = (await this.getBlockHeight())+1;
-      console.log("height:"+newBlock.height);
+      console.log("height:"+ newBlock.height);
 
     // UTC timestamp
       newBlock.time = new Date().getTime().toString().slice(0,-3);
@@ -93,6 +93,10 @@ class Blockchain{
     // get block
     getBlock(blockHeight){
       return this.db.getLevelDBData(blockHeight);
+    }
+
+    getBlockHash(blockhash){
+      return this.db.getBlockByHash(blockhash);
     }
 
     // validate block
@@ -156,10 +160,15 @@ class Blockchain{
 
     }
 
+
+
+
     
 }
 
-// let myBlockChain = new Blockchain();
+
+let myBlockChain = new Blockchain();
+
 // (function theLoop (i) {
 //     setTimeout(function () {
 //         let blockTest = new BlockClass.Block("Test Block - "+ (i + 1));
@@ -171,18 +180,37 @@ class Blockchain{
 //     }, 1000);
 //   })(0);
 
-//   let validateBlockResult = myBlockChain.validateBlock(2);
-//   if(validateBlockResult)
-//   {
-//         console.log("Block 2 is not changed！");
-//   }
+//为了验证getBlockHash函数是否真的可以根据hash返回block信息
+  let firsthash = "7d2ec04c5addc3eca81f224b2d3542f6f9e5495893619b811306094f7710813e"
 
-//   let validateChain = myBlockChain.validateChain();
-//   if(validateChain)
-//   {
-//      console.log('No errors detected');
-//   }
+  myBlockChain.getBlockHash(firsthash).then((result) => {
+    console.log(result);//output block details
+});
+
+  // let block_resolve = myBlockChain.getBlockHash(firsthash);
+  // console.log("block resolve:"+ block_resolve);
+
+  // let block_test = myBlockChain.getBlock(0);
+  // console.log(block_test);
+
+
+
+ 
+
+  // let validateBlockResult = myBlockChain.validateBlock(2);
+  // if(validateBlockResult)
+  // {
+  //       console.log("Block 2 is not changed！");
+  // }
+
+  // let validateChain = myBlockChain.validateChain();
+  // if(validateChain)
+  // {
+  //    console.log('No errors detected');
+  // }
 
 
   // module.exports.Blockchain = Blockchain;
+
+
   module.exports = Blockchain;

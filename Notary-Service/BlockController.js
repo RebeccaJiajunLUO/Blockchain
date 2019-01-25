@@ -15,10 +15,15 @@ class BlockController {
     constructor(app) {
         this.app = app;
         this.blocks = [];
+
         this.initializeMockData();
         this.getBlockByIndex();
         this.postNewBlock();
     }
+
+
+
+
 
     /**
      * Implement a GET Endpoint to retrieve a block by index, url: "/api/block/:index"
