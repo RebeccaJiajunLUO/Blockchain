@@ -11,20 +11,6 @@ const BlockClass = require('./Block.js');
 // // Creating the levelSandbox class object
 // const db = new LevelSandboxClass.LevelSandbox();
 
-/* ===== Block Class ==============================
-|  Class with a constructor for block 			   |
-|  ===============================================*/
-
-// class Block{
-// 	constructor(data){
-//      this.hash = "",
-//      this.height = 0,
-//      this.body = data,
-//      this.time = 0,
-//      this.previousBlockHash = ""
-
-//     }
-// }
 
 /* ===== Blockchain Class ==========================
 |  Class with a constructor for new blockchain 		|
@@ -34,7 +20,7 @@ class Blockchain{
   constructor(){
     this.db = new LevelSandboxClass.LevelSandbox();
 
-    this.checkIsHasGenesisBlock();
+     this.checkIsHasGenesisBlock();
     // this.addBlock(new Block("First block in the chain - Genesis block"));
   }
 
@@ -90,13 +76,20 @@ class Blockchain{
   
     }
 
-    // get block
+    // get block by height
     getBlock(blockHeight){
       return this.db.getLevelDBData(blockHeight);
     }
 
+    //get block by hash
     getBlockHash(blockhash){
       return this.db.getBlockByHash(blockhash);
+    }
+
+    //get block by wallet address
+    getBlockAddress(address){
+      return this.db.getBlockByaddress(address);
+
     }
 
     // validate block
@@ -161,13 +154,11 @@ class Blockchain{
     }
 
 
-
-
     
 }
 
 
-let myBlockChain = new Blockchain();
+// let myBlockChain = new Blockchain();
 
 // (function theLoop (i) {
 //     setTimeout(function () {
@@ -180,12 +171,12 @@ let myBlockChain = new Blockchain();
 //     }, 1000);
 //   })(0);
 
-//为了验证getBlockHash函数是否真的可以根据hash返回block信息
-  let firsthash = "7d2ec04c5addc3eca81f224b2d3542f6f9e5495893619b811306094f7710813e"
+// //为了验证getBlockHash函数是否真的可以根据hash返回block信息
+//   let firsthash = "7d2ec04c5addc3eca81f224b2d3542f6f9e5495893619b811306094f7710813e"
 
-  myBlockChain.getBlockHash(firsthash).then((result) => {
-    console.log(result);//output block details
-});
+//   myBlockChain.getBlockHash(firsthash).then((result) => {
+//     console.log(result);//output block details
+// });
 
   // let block_resolve = myBlockChain.getBlockHash(firsthash);
   // console.log("block resolve:"+ block_resolve);

@@ -8,6 +8,7 @@
 const level = require('level');
 // Declaring the folder path that store the data
 const chainDB = './chaindata';
+const hex2ascii = require('hex2ascii');
 
 // Declaring a class
 class LevelSandbox {
@@ -115,9 +116,7 @@ class LevelSandbox {
            self.db.createReadStream()
            .on('data', data => {
             //   console.log("enter data");
-              
-
-              var obj = JSON.parse(data.value)
+              var obj = JSON.parse(data.value);
          
               let Blockhash = obj.hash;
             //   console.log("Blockhash:"+ Blockhash);
@@ -137,6 +136,38 @@ class LevelSandbox {
            });
        });
     }
+
+       // Get block by wallet address
+       getBlockByaddress(address){
+        let self = this;
+        let blocks = [];
+        let block = null;
+         return new Promise((resolve, reject) => {
+            
+             self.db.createReadStream()
+             .on('data', data => {
+              //   console.log("enter data");
+               block = JSON.parse(data.value);
+           
+                let Blockaddress = block.body.address;
+                // console.log("Blockhash:"+ address);
+  
+                 if(Blockaddress === address){
+                    // console.log("enter if");
+                  block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                  blocks.push(block);          
+              }
+             })
+             .on('error', err => {
+                 reject(err)
+             })
+             .on('close',  () => {
+              //    console.log("close");
+                  // console.log("result:"+block);
+                 resolve(blocks);
+             });
+         });
+      }
    
 
 

@@ -30,6 +30,8 @@ class ValidationController {
         this.validateRequest();
         this.postBlock();
         this.getBlockByHash();
+        this.getBlockByAddress();
+        this.getBlockbyHeight();
     }
 
 
@@ -273,11 +275,91 @@ async postBlock(){
     }
 
     /**
-     * Implement a GET Endpoint to retrieve a block by index, url: "/stars/hash:[HASH]"
+     * Implement a GET Endpoint to retrieve a block by hash, url: "/stars/hash:[HASH]"
      */
     getBlockByHash() {
-        this.app.get("/stars/hash:[HASH]", async(req, res) => {
-            //以下代码还没改
+        this.app.get("/stars/hash:HASH", async(req, res) => {
+            // Add your code here
+            try{
+               let hash = req.params.HASH;
+               hash = hash.substr(1);
+               const BlockbyHash = await blockchain.getBlockHash(hash);
+
+               if(BlockbyHash === ''){
+                res.status(404).json({
+                    success: false,
+                    message: "Please check your hash, maybe the block with this hash is not stored in the database."
+                  })
+               }
+               else{
+                var obj = JSON.parse(BlockbyHash);
+
+                    let data = obj.body;
+                    let showblock = new BlockClass.Block(data);
+                    showblock.hash = obj.hash;
+                    showblock.height = obj.height;
+                    showblock.time = obj.time;
+                    showblock.previousBlockHash = obj.previousBlockHash;
+                    if(showblock.height !== 0){
+                        showblock.body.star.storyDecoded = hex2ascii(showblock.body.star.story);
+                    }
+
+                    res.send(showblock);
+
+               }
+            }
+            catch(error){
+                res.status(404).json({
+                    success: false,
+                    message: `Block is not found.${error}`
+                  })
+
+            }
+
+        });
+    }
+
+
+    /**
+     * Implement a GET Endpoint to retrieve a block by wallet address, url: "/stars/address:[ADDRESS]"
+     */
+    getBlockByAddress() {
+        this.app.get("/stars/address:ADDRESS", async(req, res) => {
+            // Add your code here
+            try{
+               let address = req.params.ADDRESS;
+               address = address.substr(1);
+               console.log("address:"+address);
+               const BlockbyAddress= await blockchain.getBlockAddress(address);
+
+               if(BlockbyAddress === ''){
+                res.status(404).json({
+                    success: false,
+                    message: "Please check your address, maybe the block with this address is not stored in the database."
+                  })
+               }
+               else{
+
+                    res.send(BlockbyAddress);
+
+               }
+            }
+            catch(error){
+                res.status(404).json({
+                    success: false,
+                    message: `Block is not found.${error}`
+                  })
+
+            }
+
+        });
+    }
+
+     /**
+     * Implement a GET Endpoint to retrieve a block by wallet address, url: "/block/[HEIGHT]"
+     */
+    getBlockbyHeight(){
+        this.app.get("/block/:index", async(req, res) => {
             // Add your code here
             try{
                 let index = req.params.index;   
@@ -287,16 +369,12 @@ async postBlock(){
                 if(IndexOfBlock)
                 {
                     //make sure IndexBlock output in JSON format
-                    var obj = JSON.parse(IndexOfBlock);
+                    var block = JSON.parse(IndexOfBlock);
+                    if(block.height !==0){
+                        block.body.star.storyDecoded = hex2ascii(block.body.star.story);
+                    }                                   
 
-                    let data = obj.body;
-                    let showblock = new BlockClass.Block(data);
-                    showblock.hash = obj.hash;
-                    showblock.height = obj.height;
-                    showblock.time = obj.time;
-                    showblock.previousBlockHash = obj.previousBlockHash;
-
-                    res.send(showblock);
+                    res.send(block);
                     // res.send(IndexOfBlock);
                 }
                 else
