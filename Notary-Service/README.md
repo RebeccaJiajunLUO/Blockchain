@@ -58,4 +58,6 @@ for (var i = 0; i < inducedErrorBlocks.length; i++) {
 8: Validate blockchain. The chain should now fail with blocks 2,4, and 7.
 ```
 blockchain.validateChain();
+
+## Change os from windows to mac.
 ```

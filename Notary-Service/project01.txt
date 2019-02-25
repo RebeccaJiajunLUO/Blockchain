@@ -1,31 +1,31 @@
-Wallet Address£º
+Wallet Addressï¿½ï¿½
 12YfHxVPXKP33tQZ9ZiGbVu1dDuu1FB7gG
 
 
-Message to be signed by your wallet£º
+Message to be signed by your walletï¿½ï¿½
 12YfHxVPXKP33tQZ9ZiGbVu1dDuu1FB7gG: Udacity rocks!
 
 
-Signature£º
+Signatureï¿½ï¿½
 IImUK4ZyYviUtMZggcnoIxmr5vjzq0MICwxCPhBGbL8JIiSna+HiEKAUhThmFJNfBzgeu/IqgkaPyTEwh+dHdy4=
 
 
 new address 01:
-public key: mnUx3KmY7AYzqaeN39c4sVUNmNM7CqztXk
+public key: n3fd5vbF91NGBUerTCCo7FxvuSCvBE3A2L
 
 private key: 
 
 cQfhnEGJN7mz6LPtnzQdZtCt62gF5hvQQh9J2YvKp7Zzzhca6YfK
 
-Message to be signed by your wallet£º
+Message to be signed by your walletï¿½ï¿½
 
 {
     
-"walletAddress": "mnUx3KmY7AYzqaeN39c4sVUNmNM7CqztXk",
+"walletAddress": "n3fd5vbF91NGBUerTCCo7FxvuSCvBE3A2L",
     
 "requestTimeStamp": "1547110394",
    
- "message": "mnUx3KmY7AYzqaeN39c4sVUNmNM7CqztXk:1547110394:starRegistry",
+ "message": "n3fd5vbF91NGBUerTCCo7FxvuSCvBE3A2L:1547110394:starRegistry",
     "validationWindow": 300
 
 }
@@ -43,7 +43,7 @@ cSBmbJorQRKgbuqBRScPyncqW9SuuQMNP4sLW2duNas1oNX3XYyb
 
 star 1:
    "star": {
-                "dec": "17¡ã 7' 48.5",
+                "dec": "17ï¿½ï¿½ 7' 48.5",
                 "ra": "4h 1m 27.0s",
                 "mag":"4.9"
                 "cen":"Taurus"
@@ -52,7 +52,7 @@ star 1:
 
 star 2:
  "star": {
-                "dec": "-26¡ã 29' 24.9",
+                "dec": "-26ï¿½ï¿½ 29' 24.9",
                 "ra": "16h 29m 1.0s",
                 "mag":"4.9",
                 "cen":"Cen",
