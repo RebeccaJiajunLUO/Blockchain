@@ -28,7 +28,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 const infuraKey = "c664472dcea44bf1af9ae8f9d5bf04a7";
 //
 // const fs = require('fs');
-// const mnemonic = 'physical addict broken canvas crash indoor goat melody distance number danger soon';
+const mnemonic = 'physical addict broken canvas crash indoor goat melody distance number danger soon';
 
 module.exports = {
   /**
@@ -76,9 +76,9 @@ module.exports = {
     // },
 
     rinkeby: {
-      // provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
-      provider: () => new HDWalletProvider('ad02d1474ffd718654bfe8e17c509ef9ea165c1c674cc64eea5c557e14202fdb', `https://rinkeby.infura.io/v3/${infuraKey}`),
-      network_id: 4,       // rinkeby's id
+        provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      //provider: () => new HDWalletProvider('ad02d1474ffd718654bfe8e17c509ef9ea165c1c674cc64eea5c557e14202fdb', `https://rinkeby.infura.io/v3/${infuraKey}`),
+        network_id: 4,       // rinkeby's id
         gas: 4500000,        // rinkeby has a lower block limit than mainnet
         gasPrice: 10000000000
     },

@@ -12,21 +12,23 @@
  * to sign your transactions before they're sent to a remote public node. Infura API
  * keys are available for free at: infura.io/register
  *
- *   > > Using Truffle V5 or later? Make sure you install the `web3-one` version.
- *
- *   > > $ npm install truffle-hdwallet-provider@web3-one
- *
  * You'll also need a mnemonic - the twelve word phrase the wallet uses to generate
  * public/private key pairs. If you're publishing your code to GitHub make sure you load this
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
 
-// const HDWallet = require('truffle-hdwallet-provider');
+// const HDWalletProvider = require('truffle-hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+
+const HDWalletProvider = require('truffle-hdwallet-provider');
+const infuraKey = "c664472dcea44bf1af9ae8f9d5bf04a7";
+//
+// const fs = require('fs');
+const mnemonic = 'physical addict broken canvas crash indoor goat melody distance number danger soon';
 
 module.exports = {
   /**
@@ -47,9 +49,9 @@ module.exports = {
     // options below to some value.
     //
     development: {
-      host: "127.0.0.1",     // Localhost (default: none)
-      port: 9545,            // Standard Ethereum port (default: none)
-      network_id: "*",       // Any network (default: none)
+     host: "127.0.0.1",     // Localhost (default: none)
+     port: 9545,            // Standard Ethereum port (default: none)
+     network_id: "*",       // Any network (default: none)
     },
 
     // Another network with more advanced options...
@@ -72,6 +74,14 @@ module.exports = {
       // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       // skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     // },
+
+    rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      // provider: () => new HDWalletProvider('ad02d1474ffd718654bfe8e17c509ef9ea165c1c674cc64eea5c557e14202fdb', `https://rinkeby.infura.io/v3/${infuraKey}`),
+      network_id: 4,       // rinkeby's id
+        gas: 4500000,        // rinkeby has a lower block limit than mainnet
+        gasPrice: 10000000000
+    },
 
     // Useful for private networks
     // private: {
